@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: rgb(233, 232, 232);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .calculator {
+      background-color:rgb(39, 38, 38);
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      width: 25%;
+    }
+
+    .screen {
+      height: 80px;
+      background-color: rgb(77, 76, 76);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding: 0 20px;
+      font-size: 2rem;
+      color: white;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(5, 1fr);
+    }
+
+    button {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      border-radius: 100%;
+      font-size: 1.5rem;
+      padding: 20px;
+      background-color: #444;
+      color: #fff;
+      transition: background-color 0.3s;
+      margin-right: 10px;
+      margin-top: 8px;
+      margin-bottom: 9px;
+      margin-left: 10px;
+    }
+
+    button:hover {
+      background-color: #575656;
+      border-radius: 25px;
+    }
+
+    button.operator {
+      background-color:cornflowerblue;
+      color: #fff;
+    }
+    .reset{
+      background-color: rgb(18, 138, 18);
+      color: white;
+    }
+
+    button.operator:hover {
+      background-color: rgb(129, 170, 247);
+      border-radius: 25px;
+    }
+
+    button.reset:hover {
+      background-color: rgb(78, 175, 78);
+      border-radius: 25px;
+    }
+  </style>
+  <title>Simple Calculator</title>
+</head>
+<body>
+
+  <div class="calculator">
+    <div class="screen" id="screen"><span class="cursor" id="textCursor"></span></div>
+    <div class="buttons" onclick="handleButtonClick(event)">
+      <button type="button" class="reset">AC</button>
+      <button id="parenthesesButton" class="operator" data-value="( )">( )</button>
+      <button class="operator" data-value="%">%</button>
+      <button class="operator" data-value="/">/</button>
+
+      <button data-value="7">7</button>
+      <button data-value="8">8</button>
+      <button data-value="9">9</button>
+      <button class="operator" data-value="*">X</button>
+
+      <button data-value="4">4</button>
+      <button data-value="5">5</button>
+      <button data-value="6">6</button>
+      <button class="operator" data-value="-">-</button>
+
+      <button data-value="1">1</button>
+      <button data-value="2">2</button>
+      <button data-value="3">3</button>
+      <button class="operator" data-value="+">+</button>
+
+      <button data-value="0">0</button>
+      <button data-value=".">.</button>
+      <button class="operator" data-value="delete">DEL</button>
+      <button class="operator" style="background-color: rgb(67, 131, 250);" data-value="=">=</button>
+    </div>
+  </div>
+
+  <script>
+    function handleButtonClick(event) {
+        const button = event.target;
+        const screen = document.getElementById("screen");
+
+        if (button.tagName === "BUTTON") {
+            const buttonValue = button.getAttribute("data-value");
+
+            switch (buttonValue) {
+                case "=":
+                    try {
+                        screen.textContent = eval(screen.textContent);
+                    } catch (error) {
+                        screen.textContent = "invalid";
+                    }
+                    break;
+                case "delete":
+                    screen.textContent = screen.textContent.slice(0, -1);
+                    break;
+                case "( )":
+                    const lastChar = screen.textContent.slice(-1);
+                    const expression = screen.textContent;
+                    const openParenthesesCount = (expression.match(/\(/g) || []).length;
+                    const closedParenthesesCount = (expression.match(/\)/g) || []).length;
+
+                    if (openParenthesesCount === closedParenthesesCount && (lastChar === "" || isNaN(parseInt(lastChar)) || lastChar === ")")) {
+                        screen.textContent += "(";
+                    } else if (openParenthesesCount > closedParenthesesCount && (lastChar !== "(" && !isNaN(parseInt(lastChar)))) {
+                        screen.textContent += ")";
+                    }
+                    break;
+                default:
+                    screen.textContent = screen.textContent === "0" ? buttonValue : screen.textContent + buttonValue;
+                    break;
+            }
+        }
+        if (button.classList.contains("reset")) {
+            screen.textContent = "";
+        }
+    }
+</script>
+
+</body>
+</html>
